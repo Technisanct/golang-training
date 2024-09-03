@@ -1,0 +1,27 @@
+env: "dev"
+secret: "supersecretstring"
+portHTTP: 8082
+portGRPC: 9090
+database:
+  mongoDB:
+    username: "username"
+    password: "password"
+    dbName: "db_falcon"
+    endpoint: "localhost"
+cors:
+  allowedOrigins:
+    - http://localhost
+    - http://localhost:4200
+  allowedMethods:
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - OPTIONS
+  allowedHeaders:
+    - "*"
+  exposeHeaders:
+    - "ts-falcon-x-session-id"
+cert:
+  key: "certs/server.key"
+  cert: "certs/server.crt"
