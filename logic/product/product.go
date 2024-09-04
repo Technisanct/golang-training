@@ -1,13 +1,28 @@
 package product
 
-import "context"
+import (
+	"context"
+	"go.mongodb.org/mongo-driver/mongo"
+	"golang-training/config"
+	"golang-training/repository/product"
+)
+
+const (
+	logTag = "logic.product"
+)
 
 type Products interface {
 	Create(ctx context.Context, request *CreateProductRequest) error
 }
 
-type productImpl struct{}
+type productImpl struct {
+	product product.Product
+}
 
 func New() Products {
-	return &productImpl{}
+	var database *mongo.Database
+	database = config.Get().Database.MongoDB.Client.Database(config.Get().Database.MongoDB.DBName)
+	return &productImpl{
+		product: product.New(database),
+	}
 }
