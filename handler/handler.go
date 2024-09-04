@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang-training/handler/category"
 	"golang-training/handler/ping"
 	"golang-training/handler/user"
 )
@@ -10,4 +11,5 @@ import (
 func InitPublicRoutes(router *gin.Engine) {
 	ping.AddRoute(router, "/ping")
 	user.AddRoute(router, "/user")
+	category.AddRoute(router, "/category")
 }
