@@ -38,3 +38,37 @@ func (h handler) CreateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, "user created successfully")
 }
+
+func (h handler) Get(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	req := GetUserRequest{}
+	if err := c.ShouldBindUri(&req); err != nil {
+		log.Error().Err(err).Msg("failed to map path params")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	response, err := h.user.Get(ctx, req.UUID)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to create user")
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, mapLogicToHandler(response))
+}
+
+func mapLogicToHandler(user *user.User) *User {
+	response := &User{
+		ID:        user.ID,
+		UUID:      user.UUID,
+		Firstname: user.Firstname,
+		Lastname:  user.Lastname,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+	}
+
+	return response
+}

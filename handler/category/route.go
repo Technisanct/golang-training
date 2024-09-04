@@ -10,5 +10,5 @@ func AddRoute(router *gin.Engine, relativePath string) {
 		category: category.New(),
 	}
 
-	router.POST(relativePath, h.createCategory)
+	router.POST(relativePath, h.CreateCategory)
 }
