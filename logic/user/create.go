@@ -2,12 +2,27 @@ package user
 
 import (
 	"context"
-	"fmt"
+	"github.com/google/uuid"
+	"golang-training/libs/logger"
+	"golang-training/repository/model"
+	"time"
 )
 
 func (u userImpl) Create(ctx context.Context, request *CreateUserRequest) error {
-	// TODO create user
-	fmt.Println("user created successfully")
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	userUUID := uuid.New().String()
+	err := u.user.Create(ctx, &model.User{
+		UUID:      userUUID,
+		Firstname: request.Firstname,
+		Lastname:  request.Lastname,
+		Email:     request.Email,
+		CreatedAt: time.Now(),
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("failed to create user")
+		return err
+	}
 
 	return nil
 }
