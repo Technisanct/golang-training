@@ -26,7 +26,6 @@ func (h handler) CreateProduct(c *gin.Context) {
 
 	err := h.product.Create(ctx, &product.CreateProductRequest{
 		ProductName: req.ProductName,
-		ProductID:   req.ProductID,
 		Price:       req.Price,
 	})
 	if err != nil {
