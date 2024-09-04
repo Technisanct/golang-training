@@ -26,7 +26,6 @@ func (h handler) CreateCategory(c *gin.Context) {
 
 	err := h.category.Create(ctx, &category.CreateCategoryRequest{
 		CategoryName: req.CategoryName,
-		CategoryId:   req.CategoryId,
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create category")
