@@ -5,13 +5,13 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	repoMocks "golang-training/repository/mocks"
+	userMocks "golang-training/repository/user/mocks"
 	"testing"
 )
 
 func Test_userImpl_Create(t *testing.T) {
 	type fields struct {
-		repo *repoMocks.Repository
+		user *userMocks.User
 	}
 	type args struct {
 		ctx     context.Context
@@ -25,7 +25,7 @@ func Test_userImpl_Create(t *testing.T) {
 	}{
 		{
 			name:   "happy path",
-			fields: fields{repo: mockCreateUserRepo(true, nil)},
+			fields: fields{user: mockCreateUserRepo(true, nil)},
 			args: args{
 				ctx: context.Background(),
 				request: &CreateUserRequest{
@@ -39,7 +39,7 @@ func Test_userImpl_Create(t *testing.T) {
 		},
 		{
 			name:   "repo error",
-			fields: fields{repo: mockCreateUserRepo(true, errors.New("failed"))},
+			fields: fields{user: mockCreateUserRepo(true, errors.New("failed"))},
 			args: args{
 				ctx: context.Background(),
 				request: &CreateUserRequest{
@@ -55,20 +55,20 @@ func Test_userImpl_Create(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			u := userImpl{
-				repo: tt.fields.repo,
+				user: tt.fields.user,
 			}
 			err := u.Create(tt.args.ctx, tt.args.request)
 			assert.Equal(t, tt.wantErr, err)
 
-			tt.fields.repo.AssertExpectations(t)
+			tt.fields.user.AssertExpectations(t)
 		})
 	}
 }
 
-func mockCreateUserRepo(enableFlag bool, createErr error) *repoMocks.Repository {
-	client := &repoMocks.Repository{}
+func mockCreateUserRepo(enableFlag bool, createErr error) *userMocks.User {
+	client := &userMocks.User{}
 	if enableFlag {
-		client.On("CreateUser", mock.Anything, mock.Anything).Return(createErr)
+		client.On("Create", mock.Anything, mock.Anything).Return(createErr)
 	}
 
 	return client

@@ -2,7 +2,9 @@ package user
 
 import (
 	"context"
-	"golang-training/repository"
+	"go.mongodb.org/mongo-driver/mongo"
+	"golang-training/config"
+	"golang-training/repository/user"
 )
 
 const (
@@ -14,11 +16,13 @@ type Users interface {
 }
 
 type userImpl struct {
-	repo repository.Repository
+	user user.User
 }
 
 func New() Users {
+	var database *mongo.Database
+	database = config.Get().Database.MongoDB.Client.Database(config.Get().Database.MongoDB.DBName)
 	return &userImpl{
-		repo: repository.New(),
+		user: user.New(database),
 	}
 }
