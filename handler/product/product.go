@@ -23,6 +23,7 @@ func (h handler) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+
 	err := h.product.Create(ctx, &product.CreateProductRequest{
 		ProductName: req.ProductName,
 		ProductID:   req.ProductID,
@@ -33,5 +34,6 @@ func (h handler) CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, "product created")
 }
