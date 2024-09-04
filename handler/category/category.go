@@ -1,6 +1,5 @@
 package category
 
-import "C"
 import (
 	"github.com/gin-gonic/gin"
 	"golang-training/libs/logger"
@@ -14,9 +13,10 @@ type handler struct {
 
 const logTag = "handler.category"
 
-func (h handler) createCategory(c *gin.Context) {
+func (h handler) CreateCategory(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
+
 	req := CreateCategoryRequest{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error().Err(err).Msg("failed to map request body")
@@ -28,7 +28,6 @@ func (h handler) createCategory(c *gin.Context) {
 		CategoryName: req.CategoryName,
 		CategoryId:   req.CategoryId,
 	})
-
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create category")
 		c.JSON(http.StatusBadRequest, err)
