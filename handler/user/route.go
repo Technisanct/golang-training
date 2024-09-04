@@ -12,4 +12,6 @@ func AddRoute(router *gin.Engine, relativePath string) {
 
 	// /user
 	router.POST(relativePath, h.CreateUser)
+	// /user/:uuid
+	router.GET(relativePath+"/:uuid", h.Get)
 }

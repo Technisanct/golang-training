@@ -13,6 +13,7 @@ const (
 
 type Users interface {
 	Create(ctx context.Context, request *CreateUserRequest) error
+	Get(ctx context.Context, uuid string) (*User, error)
 }
 
 type userImpl struct {

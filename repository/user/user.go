@@ -11,6 +11,7 @@ import (
 
 type User interface {
 	Create(ctx context.Context, doc *model.User) error
+	Find(ctx context.Context, uuid string) (*model.User, error)
 }
 
 const (
