@@ -7,10 +7,10 @@ import (
 	"golang-training/repository/model"
 )
 
-func (u Impl) Get(ctx context.Context, uuid string) (*Category, error) {
+func (i Impl) Get(ctx context.Context, uuid string) (*Category, error) {
 	log := logger.FromContextWithTag(ctx, logTag)
 
-	category, err := u.categoryRepo.Find(ctx, uuid)
+	category, err := i.categoryRepo.Find(ctx, uuid)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to find category")
 		return nil, err
@@ -21,9 +21,9 @@ func (u Impl) Get(ctx context.Context, uuid string) (*Category, error) {
 
 func mapRepoToLogic(category *model.Category) *Category {
 	response := &Category{
-		ID:           category.ID.Hex(),
-		CategoryName: category.CategoryName,
-		CreatedAt:    category.CreatedAt,
+		ID:        category.ID.Hex(),
+		Name:      category.Name,
+		CreatedAt: category.CreatedAt,
 	}
 	return response
 }

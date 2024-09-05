@@ -6,9 +6,9 @@ import (
 )
 
 type Category struct {
-	ID           *primitive.ObjectID `bson:"_id,omitempty"`
-	UUID         string              `bson:"uuid"`
-	CategoryName string              `bson:"name"`
-	CreatedAt    time.Time           `bson:"createdAt"`
-	UpdatedAt    time.Time           `bson:"updatedAt"`
+	ID        *primitive.ObjectID `bson:"_id,omitempty"`
+	UUID      string              `bson:"uuid"`
+	Name      string              `bson:"name"`
+	CreatedAt time.Time           `bson:"createdAt"`
+	UpdatedAt time.Time           `bson:"updatedAt"`
 }

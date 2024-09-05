@@ -3,7 +3,7 @@ package category
 import "time"
 
 type CreateCategoryRequest struct {
-	CategoryName string `json:"categoryName"`
+	Name string `json:"categoryName"`
 }
 
 type GetCategoryRequest struct {

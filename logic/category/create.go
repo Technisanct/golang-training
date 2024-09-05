@@ -13,9 +13,9 @@ func (u Impl) Create(ctx context.Context, request *CreateCategoryRequest) error 
 
 	categoryUUID := uuid.New().String()
 	err := u.categoryRepo.Create(ctx, &model.Category{
-		UUID:         categoryUUID,
-		CategoryName: request.CategoryName,
-		CreatedAt:    time.Now(),
+		UUID:      categoryUUID,
+		Name:      request.Name,
+		CreatedAt: time.Now(),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create category")
