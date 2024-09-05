@@ -11,18 +11,19 @@ const (
 	logTag = "logic.category"
 )
 
-type Category interface {
+type Categories interface {
 	Create(ctx context.Context, request *CreateCategoryRequest) error
+	Get(ctx context.Context, uuid string) (*Category, error)
 }
 
 type Impl struct {
-	category category.Category
+	categoryRepo category.Category
 }
 
-func New() Category {
+func New() Categories {
 	var database *mongo.Database
 	database = config.Get().Database.MongoDB.Client.Database(config.Get().Database.MongoDB.DBName)
 	return &Impl{
-		category: category.New(database),
+		categoryRepo: category.New(database),
 	}
 }

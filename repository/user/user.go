@@ -38,6 +38,7 @@ func New(database *mongo.Database) User {
 	return &userImpl{
 		collection: collection,
 	}
+
 }
 
 // createIndexes... define indexes for the collection

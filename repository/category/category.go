@@ -11,6 +11,7 @@ import (
 
 type Category interface {
 	Create(ctx context.Context, doc *model.Category) error
+	Find(ctx context.Context, uuid string) (*model.Category, error)
 }
 
 const (
