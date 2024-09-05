@@ -12,9 +12,9 @@ func (u Impl) Create(ctx context.Context, request *CreateCategoryRequest) error 
 	log := logger.FromContextWithTag(ctx, logTag)
 
 	categoryUUID := uuid.New().String()
-	err := u.category.Create(ctx, &model.Category{
+	err := u.categoryRepo.Create(ctx, &model.Category{
 		UUID:      categoryUUID,
-		Name:      request.CategoryName,
+		Name:      request.Name,
 		CreatedAt: time.Now(),
 	})
 	if err != nil {
