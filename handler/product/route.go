@@ -12,4 +12,7 @@ func AddRoute(router *gin.Engine, relativePath string) {
 
 	// /product
 	router.POST(relativePath, h.CreateProduct)
+
+	// /product/:UUID
+	router.GET(relativePath+"/:uuid", h.Get)
 }

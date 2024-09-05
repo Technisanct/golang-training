@@ -13,6 +13,7 @@ const (
 
 type Products interface {
 	Create(ctx context.Context, request *CreateProductRequest) error
+	Get(ctx context.Context, uuid string) (*Product, error)
 }
 
 type productImpl struct {

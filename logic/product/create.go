@@ -19,7 +19,7 @@ func (p productImpl) Create(ctx context.Context, request *CreateProductRequest) 
 
 	err := p.product.Create(ctx, &model.Product{
 		UUID:            productUUID,
-		Name:            request.ProductName,
+		Name:            request.Name,
 		Price:           price,
 		DiscountedPrice: discountedPrice,
 		CreatedAt:       time.Now(),
