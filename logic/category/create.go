@@ -12,10 +12,10 @@ func (u Impl) Create(ctx context.Context, request *CreateCategoryRequest) error 
 	log := logger.FromContextWithTag(ctx, logTag)
 
 	categoryUUID := uuid.New().String()
-	err := u.category.Create(ctx, &model.Category{
-		UUID:      categoryUUID,
-		Name:      request.CategoryName,
-		CreatedAt: time.Now(),
+	err := u.categoryRepo.Create(ctx, &model.Category{
+		UUID:         categoryUUID,
+		CategoryName: request.CategoryName,
+		CreatedAt:    time.Now(),
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to create category")
