@@ -12,5 +12,6 @@ func AddRoute(router *gin.Engine, relativePath string) {
 
 	router.POST(relativePath, h.CreateCategory)
 	router.GET(relativePath+"/:uuid", h.Get)
+	router.DELETE(relativePath+"/:uuid", h.Delete)
 
 }

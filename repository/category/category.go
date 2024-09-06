@@ -12,6 +12,7 @@ import (
 type Category interface {
 	Create(ctx context.Context, doc *model.Category) error
 	Find(ctx context.Context, uuid string) (*model.Category, error)
+	Delete(ctx context.Context, uuid string) error
 }
 
 const (
