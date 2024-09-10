@@ -32,6 +32,24 @@ func (_m *Category) Create(ctx context.Context, doc *model.Category) error {
 	return r0
 }
 
+// Delete provides a mock function with given fields: ctx, uuid
+func (_m *Category) Delete(ctx context.Context, uuid string) error {
+	ret := _m.Called(ctx, uuid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Delete")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, uuid)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Find provides a mock function with given fields: ctx, uuid
 func (_m *Category) Find(ctx context.Context, uuid string) (*model.Category, error) {
 	ret := _m.Called(ctx, uuid)

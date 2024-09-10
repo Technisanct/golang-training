@@ -57,6 +57,27 @@ func (h handler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, mapLogicToHandler(response))
 }
 
+func (h handler) Delete(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	req := GetDeleteCategoryRequest{}
+	if err := c.ShouldBindUri(&req); err != nil {
+		log.Error().Err(err).Msg("failed to map path body")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	err := h.category.Delete(ctx, req.UUID)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to Delete category")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, "category deleted successfully")
+}
+
 func mapLogicToHandler(category *category.Category) *GetCategoryResponse {
 	response := &GetCategoryResponse{
 		UUID:      category.ID,
