@@ -14,6 +14,7 @@ const (
 type Products interface {
 	Create(ctx context.Context, request *CreateProductRequest) error
 	Get(ctx context.Context, uuid string) (*Product, error)
+	Delete(ctx context.Context, uuid string) error
 }
 
 type productImpl struct {

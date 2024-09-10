@@ -12,6 +12,7 @@ import (
 type Product interface {
 	Create(ctx context.Context, doc *model.Product) error
 	Find(ctx context.Context, uuid string) (*model.Product, error)
+	DeleteOne(ctx context.Context, uuid string) error
 }
 
 const (

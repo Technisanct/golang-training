@@ -15,4 +15,5 @@ func AddRoute(router *gin.Engine, relativePath string) {
 
 	// /product/:UUID
 	router.GET(relativePath+"/:uuid", h.Get)
+	router.DELETE(relativePath+"/:uuid", h.Delete)
 }

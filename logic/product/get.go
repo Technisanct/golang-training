@@ -19,6 +19,7 @@ func (p productImpl) Get(ctx context.Context, uuid string) (*Product, error) {
 }
 
 func mapRepoToLogic(product *model.Product) *Product {
+
 	response := &Product{
 		ID:              product.ID.Hex(),
 		UUID:            product.UUID,
@@ -27,6 +28,5 @@ func mapRepoToLogic(product *model.Product) *Product {
 		DiscountedPrice: product.DiscountedPrice,
 		UpdatedAt:       product.UpdatedAt,
 	}
-
 	return response
 }
