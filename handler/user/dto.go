@@ -21,3 +21,7 @@ type User struct {
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"createdAt"`
 }
+
+type CreateUserResponse struct {
+	Message string `json:"message"`
+}

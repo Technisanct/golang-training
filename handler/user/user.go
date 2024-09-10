@@ -32,11 +32,11 @@ func (h handler) CreateUser(c *gin.Context) {
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create user")
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, "user created successfully")
+	c.JSON(http.StatusOK, &CreateUserResponse{Message: "user created successfully"})
 }
 
 func (h handler) Get(c *gin.Context) {
