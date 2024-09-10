@@ -32,5 +32,6 @@ func (p productImpl) DeleteOne(ctx context.Context, uuid string) error {
 		log.Info().Msg("Document deleted successfully")
 		return nil
 	}
+
 	return nil
 }

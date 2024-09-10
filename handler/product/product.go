@@ -75,8 +75,10 @@ func (h handler) Delete(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "product deleted"})
 }
+
 func mapLogicToHandler(product *product.Product) *Product {
 	response := &Product{
 		ID:              product.ID,
