@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	userMocks "golang-training/logic/user/mocks"
-	"golang-training/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -32,7 +31,7 @@ func Test_handler_CreateUser(t *testing.T) {
 		fields             fields
 		args               args
 		expectedStatusCode int
-		expectedResponse   *utils.RestResponse
+		expectedResponse   interface{}
 	}{
 		{
 			name: "happy path",
@@ -43,9 +42,7 @@ func Test_handler_CreateUser(t *testing.T) {
 				c:       nil,
 				request: validCreateUserRequestHandler,
 			},
-			expectedResponse: &utils.RestResponse{
-				Message: "user created successfully",
-			},
+			expectedResponse:   &CreateUserResponse{Message: "user created successfully"},
 			expectedStatusCode: http.StatusOK,
 		},
 		{
@@ -57,9 +54,7 @@ func Test_handler_CreateUser(t *testing.T) {
 				c:       nil,
 				request: validCreateUserRequestHandler,
 			},
-			expectedResponse: &utils.RestResponse{
-				Message: "",
-			},
+			expectedResponse:   &CreateUserResponse{Message: ""},
 			expectedStatusCode: http.StatusInternalServerError,
 		},
 	}
@@ -85,11 +80,11 @@ func Test_handler_CreateUser(t *testing.T) {
 			// Assert
 			assert.Equal(t, tt.expectedStatusCode, w.Code)
 
-			var response *utils.RestResponse
+			var response *CreateUserResponse
 			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 				t.Fatal(err)
 			}
-			assert.Equal(t, tt.expectedResponse.Message, response.Message)
+			assert.Equal(t, tt.expectedResponse, response)
 
 			tt.fields.user.AssertExpectations(t)
 		})
