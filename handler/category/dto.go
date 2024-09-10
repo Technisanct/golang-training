@@ -3,7 +3,7 @@ package category
 import "time"
 
 type CreateCategoryRequest struct {
-	Name string `json:"categoryName"`
+	Name string `json:"name"`
 }
 
 type GetCategoryRequest struct {
@@ -15,4 +15,8 @@ type GetCategoryResponse struct {
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type GetDeleteCategoryRequest struct {
+	UUID string `uri:"uuid"`
 }

@@ -14,6 +14,7 @@ const (
 type Categories interface {
 	Create(ctx context.Context, request *CreateCategoryRequest) error
 	Get(ctx context.Context, uuid string) (*Category, error)
+	Delete(ctx context.Context, uuid string) error
 }
 
 type Impl struct {
