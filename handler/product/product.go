@@ -58,6 +58,25 @@ func (h handler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, mapLogicToHandler(response))
 }
 
+func (h handler) Delete(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	req := GetProductReq{}
+	if err := c.ShouldBindUri(&req); err != nil {
+		log.Error().Err(err).Msg("failed to map request body")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	err := h.product.Delete(ctx, req.UUID)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to delete product")
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "product deleted"})
+}
 func mapLogicToHandler(product *product.Product) *Product {
 	response := &Product{
 		ID:              product.ID,
