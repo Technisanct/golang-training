@@ -2,6 +2,7 @@ package product
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -66,6 +67,18 @@ func Test_handler_Get(t *testing.T) {
 			expectedStatusCode: http.StatusOK,
 			expectedResponse:   validData,
 		},
+		{
+			name: "getPost error",
+			fields: fields{
+				product: mockLogicProduct(nil, errors.New("failed")),
+			},
+			args: args{
+				ctx:  nil,
+				uuid: validUUID,
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+			expectedResponse:   validData,
+		},
 	}
 
 	for _, tt := range tests {
@@ -82,7 +95,6 @@ func Test_handler_Get(t *testing.T) {
 			h.Get(c)
 
 			assert.Equal(t, tt.expectedStatusCode, w.Code)
-
 			var response *Product
 			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 				t.Fatal(err)
