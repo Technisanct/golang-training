@@ -30,11 +30,11 @@ func (h handler) CreateProduct(c *gin.Context) {
 	})
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create product")
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, "product created")
+	c.JSON(http.StatusCreated, &CreateProductResponse{Message: "created successfully"})
 }
 
 func (h handler) Get(c *gin.Context) {
