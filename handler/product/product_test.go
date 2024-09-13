@@ -68,7 +68,7 @@ func Test_handler_Get(t *testing.T) {
 			expectedResponse:   validData,
 		},
 		{
-			name: "getPost error",
+			name: "logic error",
 			fields: fields{
 				product: mockLogicProduct(nil, errors.New("failed")),
 			},
