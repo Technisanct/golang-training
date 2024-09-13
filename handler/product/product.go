@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang-training/libs/logger"
 	"golang-training/logic/product"
-
 	"net/http"
 )
 
