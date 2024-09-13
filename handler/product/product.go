@@ -1,9 +1,11 @@
 package product
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang-training/libs/logger"
 	"golang-training/logic/product"
+
 	"net/http"
 )
 
@@ -40,13 +42,14 @@ func (h handler) CreateProduct(c *gin.Context) {
 func (h handler) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
-
+	fmt.Println("line 45")
 	req := GetProductReq{}
 	if err := c.ShouldBindUri(&req); err != nil {
 		log.Error().Err(err).Msg("failed to map request body")
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+	fmt.Println("line 52")
 
 	response, err := h.product.Get(ctx, req.UUID)
 	if err != nil {
@@ -54,6 +57,7 @@ func (h handler) Get(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
+	fmt.Println("line 60")
 
 	c.JSON(http.StatusOK, mapLogicToHandler(response))
 }
