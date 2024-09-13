@@ -37,7 +37,7 @@ func TestImpl_Create(t *testing.T) {
 		},
 		{
 			name:   "repo error",
-			fields: fields{categoryRepo: mockCreateCategoryRepo(true, errors.New("repo error"))},
+			fields: fields{categoryRepo: mockCreateCategoryRepo(true, errors.New("failed"))},
 			args: args{
 				ctx: context.Background(),
 				request: &CreateCategoryRequest{
