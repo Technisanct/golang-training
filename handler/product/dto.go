@@ -24,3 +24,7 @@ type Product struct {
 type CreateProductResponse struct {
 	Message string `json:"message"`
 }
+
+type DeleteProductResponse struct {
+	Message string `json:"message"`
+}
