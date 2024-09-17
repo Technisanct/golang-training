@@ -198,3 +198,79 @@ func mockProductLogic(enableFlag bool, err error) *productMocks.Products {
 
 	return client
 }
+
+func Test_handler_Delete(t *testing.T) {
+	type fields struct {
+		product *productMocks.Products
+	}
+	type args struct {
+		c    *gin.Context
+		uuid string
+	}
+	tests := []struct {
+		name               string
+		fields             fields
+		args               args
+		expectedStatusCode int
+		expectedResponse   interface{}
+	}{
+		{
+			name: "happy path",
+			fields: fields{
+				product: mockDeleteProductLogic(true, nil),
+			},
+			args: args{
+				c:    nil,
+				uuid: "uuid-123",
+			},
+			expectedStatusCode: http.StatusOK,
+			expectedResponse:   &DeleteProductResponse{Message: "deleted successfully"},
+		},
+		{
+			name: "logic error",
+			fields: fields{
+				product: mockDeleteProductLogic(true, errors.New("failed")),
+			},
+			args: args{
+				c:    nil,
+				uuid: "uuid-123",
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+			expectedResponse:   &DeleteProductResponse{Message: ""},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(w)
+
+			req, _ := http.NewRequest("DELETE", "/product/"+tt.args.uuid, nil)
+			c.Request = req
+
+			h := handler{
+				product: tt.fields.product,
+			}
+			h.Delete(c)
+
+			assert.Equal(t, tt.expectedStatusCode, w.Code)
+
+			var response *DeleteProductResponse
+			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+				t.Fatal(err)
+			}
+			assert.Equal(t, tt.expectedResponse, response)
+
+			tt.fields.product.AssertExpectations(t)
+		})
+	}
+}
+
+func mockDeleteProductLogic(enableFlag bool, err error) *productMocks.Products {
+	client := &productMocks.Products{}
+	if enableFlag {
+		client.On("Delete", mock.Anything, mock.Anything).Return(err)
+	}
+
+	return client
+}
