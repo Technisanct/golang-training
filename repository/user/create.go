@@ -2,11 +2,12 @@ package user
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang-training/libs/logger"
 	"golang-training/repository/model"
 	"golang-training/storage/mongodb"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (u userImpl) Create(ctx context.Context, doc *model.User) error {
