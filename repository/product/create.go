@@ -16,7 +16,7 @@ func (p productImpl) Create(c ctx.Context, payloadData *model.Product) error {
 	// logs
 	log := logger.FromContextWithTag(c, logTag)
 
-	ch := make(chan error)
+	ch := make(chan error, 1)
 
 	newCtx, cancel := ctx.WithTimeout(c, mongodb.ConnectionTimeout*time.Second)
 	defer cancel()
@@ -35,8 +35,10 @@ func (p productImpl) Create(c ctx.Context, payloadData *model.Product) error {
 	}(newCtx, ch)
 
 	if errs := <-ch; errs != nil {
+		close(ch)
 		return errs
 	}
 
+	close(ch)
 	return nil
 }
