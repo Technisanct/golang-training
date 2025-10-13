@@ -12,8 +12,6 @@ import (
 
 type Product interface {
 	Create(c context.Context, doc *model.Product) error
-	GetAll(c context.Context) ([]model.Product, error)
-	GetOne(c context.Context, id int) (model.Product, error)
 }
 
 const (
