@@ -4,7 +4,7 @@ package mocks
 
 import (
 	context "context"
-	model "golang-training/repository/model"
+	contract "golang-training/logic/product/contract"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -14,17 +14,17 @@ type Products struct {
 	mock.Mock
 }
 
-// CreateProduct provides a mock function with given fields: c, payloadData
-func (_m *Products) CreateProduct(c context.Context, payloadData *model.Product) error {
-	ret := _m.Called(c, payloadData)
+// Create provides a mock function with given fields: c, request
+func (_m *Products) Create(c context.Context, request *contract.CreateProductRequest) error {
+	ret := _m.Called(c, request)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CreateProduct")
+		panic("no return value specified for Create")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *model.Product) error); ok {
-		r0 = rf(c, payloadData)
+	if rf, ok := ret.Get(0).(func(context.Context, *contract.CreateProductRequest) error); ok {
+		r0 = rf(c, request)
 	} else {
 		r0 = ret.Error(0)
 	}

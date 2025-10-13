@@ -3,7 +3,7 @@ package product
 import (
 	"context"
 	"errors"
-	"golang-training/repository/model"
+	"golang-training/logic/product/contract"
 	"golang-training/repository/product/mocks"
 	"testing"
 	"time"
@@ -21,10 +21,10 @@ func TestProductService(t *testing.T) {
 		product *mocks.Product
 	}
 	type Args struct {
-		data *model.Product
+		data *contract.CreateProductRequest
 	}
 
-	payload := &model.Product{
+	payload := &contract.CreateProductRequest{
 		Name:            "test-1",
 		Price:           100.00,
 		DiscountedPrice: 10.00,
@@ -37,7 +37,7 @@ func TestProductService(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name:   "should create successfully",
+			name:   "happy path",
 			ctx:    c,
 			mocked: mockRepo{product: mockCreateProductRepo(true, nil)},
 			args: Args{
@@ -46,11 +46,14 @@ func TestProductService(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:   "should throw error on passing empty request data",
+			name:   "repo error",
 			ctx:    c,
 			mocked: mockRepo{product: mockCreateProductRepo(true, errors.New("failed"))},
 			args: Args{
-				data: nil,
+				data: &contract.CreateProductRequest{
+					Name:            "naruto-x",
+					DiscountedPrice: 10.00,
+				},
 			},
 			wantErr: errors.New("failed"),
 		},
@@ -62,7 +65,7 @@ func TestProductService(t *testing.T) {
 			prod := productImpl{
 				product: tt.mocked.product,
 			}
-			err := prod.CreateProduct(tt.ctx, tt.args.data)
+			err := prod.Create(tt.ctx, tt.args.data)
 			assert.Equal(t, tt.wantErr, err)
 		})
 	}
