@@ -25,6 +25,7 @@ func TestProductCreate(t *testing.T) {
 
 	type Args struct {
 		data *model.Product
+		ctx  context.Context
 	}
 
 	payload := &model.Product{
@@ -35,34 +36,33 @@ func TestProductCreate(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		ctx        context.Context
 		args       Args
 		mockReturn error
 		wantErr    error
 	}{
 		{
-			name: "should create user successfully",
-			ctx:  c,
+			name: "happy path",
 			args: Args{
 				data: payload,
+				ctx:  c,
 			},
 			mockReturn: nil,
 			wantErr:    nil,
 		},
 		{
 			name: "should throw error when nil or empty data is passed for creation",
-			ctx:  c,
 			args: Args{
 				data: nil,
+				ctx:  c,
 			},
 			mockReturn: errors.New("write error"),
 			wantErr:    errors.New("write error"),
 		},
 		{
 			name: "should throw error when timeout is finished or function is taking too much time than its limits",
-			ctx:  c,
 			args: Args{
 				data: payload,
+				ctx:  c,
 			},
 			mockReturn: context.DeadlineExceeded,
 			wantErr:    context.DeadlineExceeded,
@@ -78,7 +78,7 @@ func TestProductCreate(t *testing.T) {
 			Return(tt.mockReturn)
 
 		t.Run(tt.name, func(t *testing.T) {
-			err := ProductRepoI.Create(tt.ctx, tt.args.data)
+			err := ProductRepoI.Create(tt.args.ctx, tt.args.data)
 			assert.Equal(t, err, tt.wantErr)
 		})
 
@@ -120,27 +120,27 @@ func TestProductRepoInMemoryDb(t *testing.T) {
 
 	type args struct {
 		data *model.Product
+		ctx  context.Context
 	}
 
 	tests := []struct {
 		name    string
-		ctx     context.Context
 		args    args
 		wantErr error
 	}{
 		{
-			name: "should create successfully",
-			ctx:  c,
+			name: "happy path",
 			args: args{
 				data: payload,
+				ctx:  c,
 			},
 			wantErr: nil,
 		},
 		{
-			name: "should throw error if the data is nil",
-			ctx:  c,
+			name: "repo err",
 			args: args{
 				data: nil,
+				ctx:  c,
 			},
 			wantErr: nil,
 		},
@@ -156,7 +156,7 @@ func TestProductRepoInMemoryDb(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err = repo.Create(tt.ctx, payload)
+			err = repo.Create(tt.args.ctx, payload)
 			assert.NoError(t, err)
 
 			var product model.Product

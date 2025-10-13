@@ -10,10 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type productImpl struct {
-	collection *mongo.Collection
-}
-
 type Product interface {
 	Create(c context.Context, doc *model.Product) error
 	GetAll(c context.Context) ([]model.Product, error)
@@ -26,9 +22,14 @@ const (
 	KeyObjectID    = "_id"
 )
 
+type productImpl struct {
+	collection *mongo.Collection
+}
+
 func New(db *mongo.Database) *productImpl {
 
 	collection := db.Collection(collectionName)
+
 	mod := createIndexes()
 
 	_, err := collection.Indexes().CreateMany(context.Background(), *mod)

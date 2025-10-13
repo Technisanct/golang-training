@@ -1,10 +1,11 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
 	"golang-training/libs/logger"
 	"golang-training/logic/user"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type handler struct {
