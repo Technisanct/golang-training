@@ -13,13 +13,22 @@ const (
 	logTag = "logic.product"
 )
 
-type Products interface {
-	CreateProduct(c context.Context, payloadData *model.Product) error
-}
+type (
+	Products interface {
+		CreateProduct(c context.Context, payloadData *model.Product) error
+	}
+	productImpl struct {
+		product product.Product
+	}
+)
 
-type productImpl struct {
-	product product.Product
-}
+// type Products interface {
+// 	CreateProduct(c context.Context, payloadData *model.Product) error
+// }
+
+// type productImpl struct {
+// 	product product.Product
+// }
 
 func New() *productImpl {
 

@@ -17,20 +17,27 @@ func TestProductService(t *testing.T) {
 	c, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	type mockRepo struct {
-		product *mocks.Product
-	}
+	type (
+		mockRepo struct {
+			product *mocks.Product
+		}
 
-	type Args struct {
-		data *model.Product
-	}
+		Args struct {
+			data *model.Product
+		}
+	)
+	// type mockRepo struct {
+	// product *mocks.Product
+	//}
+	// type Args struct {
+	// 	data *model.Product
+	// }
 
 	payload := &model.Product{
 		Name:            "test-1",
 		Price:           100.00,
 		DiscountedPrice: 10.00,
 	}
-
 	tests := []struct {
 		name    string
 		mocked  mockRepo

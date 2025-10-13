@@ -31,6 +31,7 @@ func (h handler) CreateProductHandler(c *gin.Context) {
 		DiscountedPrice: req.DiscountedPrice,
 	})
 	if err != nil {
+		log.Error().Err(err).Msg("error while creating product")
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status": "error",
 			"error":  err.Error(),
