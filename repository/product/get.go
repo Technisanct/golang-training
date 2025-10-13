@@ -18,7 +18,6 @@ func (p productImpl) GetOne(c ctx.Context, prodId int) (model.Product, error) {
 	// // if err != nil {
 	// // 	log.Error().Err(err).
 	// // 		Msg("error while retrieving products from database")
-
 	// // 	return model.Product{}, err
 	// // }
 

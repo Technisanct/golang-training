@@ -1,13 +1,16 @@
 package product
 
 import (
+	"golang-training/logic/product"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func AddRoute(router *gin.Engine, relativePath string) {
-	h := NewProductHandler()
+	h := handler{
+		product: product.New(),
+	}
 
 	router.GET(relativePath, func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

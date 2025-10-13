@@ -40,7 +40,7 @@ func TestCreateProductHandler(t *testing.T) {
 			mocked: mockService{
 				productServ: mockLogicProduct(true, nil),
 			},
-			expectedStatusCode: 201,
+			expectedStatusCode: http.StatusCreated,
 			expectedResponse: &CreateProductResponse{
 				Status:  "success",
 				Message: "product successfully created",
@@ -58,7 +58,7 @@ func TestCreateProductHandler(t *testing.T) {
 
 			c.Request = r
 			t.Run(tt.name, func(t *testing.T) {
-				h := productHandler{
+				h := handler{
 					product: tt.mocked.productServ,
 				}
 				h.CreateProductHandler(c)
@@ -102,7 +102,7 @@ func TestErrorsOnCreateProductHandler(t *testing.T) {
 			mocked: mockService{
 				productServ: mockLogicProduct(true, nil),
 			},
-			expectedStatusCode: 400,
+			expectedStatusCode: http.StatusBadRequest,
 		},
 		{
 			name: "should return 400",
@@ -113,7 +113,7 @@ func TestErrorsOnCreateProductHandler(t *testing.T) {
 			mocked: mockService{
 				productServ: mockLogicProduct(true, nil),
 			},
-			expectedStatusCode: 400,
+			expectedStatusCode: http.StatusBadRequest,
 		},
 	}
 
@@ -127,7 +127,7 @@ func TestErrorsOnCreateProductHandler(t *testing.T) {
 
 			c.Request = r
 			t.Run(tt.name, func(t *testing.T) {
-				h := productHandler{
+				h := handler{
 					product: tt.mocked.productServ,
 				}
 				h.CreateProductHandler(c)

@@ -12,7 +12,6 @@ import (
 
 func (p productImpl) Create(c ctx.Context, payloadData *model.Product) error {
 
-	// logs
 	log := logger.FromContextWithTag(c, logTag)
 
 	newCtx, cancel := ctx.WithTimeout(c, mongodb.ConnectionTimeout*time.Second)
@@ -26,6 +25,6 @@ func (p productImpl) Create(c ctx.Context, payloadData *model.Product) error {
 			Msg("error while inserting data in mongodb")
 		return err
 	}
-	ß
+
 	return nil
 }

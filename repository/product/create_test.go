@@ -81,6 +81,7 @@ func TestProductCreate(t *testing.T) {
 			err := ProductRepoI.Create(tt.ctx, tt.args.data)
 			assert.Equal(t, err, tt.wantErr)
 		})
+
 	}
 }
 
