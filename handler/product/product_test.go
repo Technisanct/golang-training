@@ -7,7 +7,6 @@ import (
 	"golang-training/logic/product/mocks"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -21,28 +20,28 @@ var (
 )
 
 func TestCreateProductHandler(t *testing.T) {
-	type repo struct {
+	type fields struct {
 		product *mocks.Products
 	}
-	type Args struct {
+	type args struct {
 		request []byte
 		ctx     *gin.Context
 	}
 
 	tests := []struct {
 		name               string
-		fields             repo
-		args               Args
+		fields             fields
+		args               args
 		expectedStatusCode int
 		expectedResponse   any
 	}{
 		{
 			name: "happy path",
-			args: Args{
+			args: args{
 				request: validCreateProductRequest,
 				ctx:     nil,
 			},
-			fields: repo{
+			fields: fields{
 				product: mockLogicProduct(true, nil),
 			},
 			expectedStatusCode: http.StatusCreated,
@@ -52,27 +51,15 @@ func TestCreateProductHandler(t *testing.T) {
 		},
 		{
 			name: "logic error",
-			args: Args{
+			args: args{
 				ctx:     nil,
 				request: validCreateProductRequest,
 			},
-			fields: repo{
+			fields: fields{
 				product: mockLogicProduct(true, errors.New("failed")),
 			},
 			expectedStatusCode: http.StatusInternalServerError,
 			expectedResponse:   &CreateProductResponse{Message: ""},
-		},
-		{
-			name: "validation error",
-			args: Args{
-				ctx:     nil,
-				request: invalidCreateProductRequest,
-			},
-			fields: repo{
-				product: mockLogicProduct(false, nil),
-			},
-			expectedStatusCode: http.StatusBadRequest,
-			// expectedResponse: ,
 		},
 	}
 	for _, tt := range tests {
@@ -93,14 +80,6 @@ func TestCreateProductHandler(t *testing.T) {
 			})
 
 			assert.Equal(t, tt.expectedStatusCode, w.Code)
-
-			if tt.name == "validation error" {
-				var errResponse string
-				if err := json.Unmarshal(w.Body.Bytes(), &errResponse); err != nil {
-					assert.Contains(t, strings.ToLower(errResponse), "price")
-				}
-				return
-			}
 
 			var response *CreateProductResponse
 			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {

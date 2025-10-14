@@ -20,14 +20,12 @@ const (
 	KeyObjectID    = "_id"
 )
 
-type productImpl struct {
+type repo struct {
 	collection *mongo.Collection
 }
 
-func New(db *mongo.Database) *productImpl {
-
+func New(db *mongo.Database) *repo {
 	collection := db.Collection(collectionName)
-
 	mod := createIndexes()
 
 	_, err := collection.Indexes().CreateMany(context.Background(), *mod)
@@ -35,7 +33,7 @@ func New(db *mongo.Database) *productImpl {
 		panic(fmt.Sprintf("index creation failed in project repo with ERR: %v", err))
 	}
 
-	return &productImpl{
+	return &repo{
 		collection,
 	}
 }

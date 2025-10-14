@@ -27,42 +27,42 @@ func TestProductService(t *testing.T) {
 	type fields struct {
 		product *mocks.Product
 	}
-	type Args struct {
-		data *contract.CreateProductRequest
-		ctx  context.Context
+	type args struct {
+		request *contract.CreateProductRequest
+		ctx     context.Context
 	}
 
 	tests := []struct {
 		name    string
 		fields  fields
-		args    Args
+		args    args
 		wantErr error
 	}{
 		{
 			name:   "happy path",
 			fields: fields{product: mockCreateProductRepo(true, nil)},
-			args: Args{
-				data: &createProductRequest,
-				ctx:  context.Background(),
+			args: args{
+				request: &createProductRequest,
+				ctx:     context.Background(),
 			},
 			wantErr: nil,
 		},
 		{
 			name:   "repo error",
 			fields: fields{product: mockCreateProductRepo(true, errors.New("failed"))},
-			args: Args{
-				data: &invalidCreateProductRequest,
-				ctx:  context.Background(),
+			args: args{
+				request: &invalidCreateProductRequest,
+				ctx:     context.Background(),
 			},
 			wantErr: errors.New("failed"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			prod := productImpl{
+			p := productImpl{
 				product: tt.fields.product,
 			}
-			err := prod.Create(tt.args.ctx, tt.args.data)
+			err := p.Create(tt.args.ctx, tt.args.request)
 			assert.Equal(t, tt.wantErr, err)
 		})
 	}
