@@ -16,7 +16,6 @@ type handler struct {
 const logTag = "handler.product"
 
 func (h handler) CreateProduct(c *gin.Context) {
-
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
 

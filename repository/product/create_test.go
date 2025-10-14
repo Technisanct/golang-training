@@ -68,11 +68,9 @@ func TestProductCreate(t *testing.T) {
 			wantErr:    context.DeadlineExceeded,
 		},
 	}
-
 	for _, tt := range tests {
 
 		ProductRepoI := mocks.NewProduct(t)
-
 		ProductRepoI.
 			On("Create", mock.Anything, tt.args.data).
 			Return(tt.mockReturn)
@@ -105,9 +103,9 @@ func TestProductRepoInMemoryDb(t *testing.T) {
 
 	db := client.Database("testdb")
 	collection := db.Collection("products")
-	var findOne func(name string, product *model.Product) error
-
 	repo := New(db)
+
+	var findOne func(name string, product *model.Product) error
 
 	c, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()

@@ -7,6 +7,7 @@ import (
 	"golang-training/logic/product/mocks"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -15,16 +16,14 @@ import (
 )
 
 var (
-	validCreationCredentialRequestHandler = []byte(`{"name": "test1", "price": 100.00, "discount_price": 10.00}`)
-	invalidCreateCredentialRequestHandler = []byte(`{"name": "test1", "discount_price": 10.00}`)
+	validCreateProductRequest   = []byte(`{"name": "test1", "price": 100.00, "discount_price": 10.00}`)
+	invalidCreateProductRequest = []byte(`{"name": "test1", "discount_price": 10.00}`)
 )
 
 func TestCreateProductHandler(t *testing.T) {
-
-	type mockService struct {
-		productServ *mocks.Products
+	type repo struct {
+		product *mocks.Products
 	}
-
 	type Args struct {
 		request []byte
 		ctx     *gin.Context
@@ -32,7 +31,7 @@ func TestCreateProductHandler(t *testing.T) {
 
 	tests := []struct {
 		name               string
-		mocked             mockService
+		fields             repo
 		args               Args
 		expectedStatusCode int
 		expectedResponse   any
@@ -40,11 +39,11 @@ func TestCreateProductHandler(t *testing.T) {
 		{
 			name: "happy path",
 			args: Args{
-				request: validCreationCredentialRequestHandler,
+				request: validCreateProductRequest,
 				ctx:     nil,
 			},
-			mocked: mockService{
-				productServ: mockLogicProduct(true, nil),
+			fields: repo{
+				product: mockLogicProduct(true, nil),
 			},
 			expectedStatusCode: http.StatusCreated,
 			expectedResponse: &CreateProductResponse{
@@ -55,16 +54,27 @@ func TestCreateProductHandler(t *testing.T) {
 			name: "logic error",
 			args: Args{
 				ctx:     nil,
-				request: validCreationCredentialRequestHandler,
+				request: validCreateProductRequest,
 			},
-			mocked: mockService{
-				productServ: mockLogicProduct(true, errors.New("failed")),
+			fields: repo{
+				product: mockLogicProduct(true, errors.New("failed")),
 			},
 			expectedStatusCode: http.StatusInternalServerError,
 			expectedResponse:   &CreateProductResponse{Message: ""},
 		},
+		{
+			name: "validation error",
+			args: Args{
+				ctx:     nil,
+				request: invalidCreateProductRequest,
+			},
+			fields: repo{
+				product: mockLogicProduct(false, nil),
+			},
+			expectedStatusCode: http.StatusBadRequest,
+			// expectedResponse: ,
+		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
@@ -77,19 +87,27 @@ func TestCreateProductHandler(t *testing.T) {
 
 			t.Run(tt.name, func(t *testing.T) {
 				h := handler{
-					product: tt.mocked.productServ,
+					product: tt.fields.product,
 				}
 				h.CreateProduct(c)
 			})
 
 			assert.Equal(t, tt.expectedStatusCode, w.Code)
 
+			if tt.name == "validation error" {
+				var errResponse string
+				if err := json.Unmarshal(w.Body.Bytes(), &errResponse); err != nil {
+					assert.Contains(t, strings.ToLower(errResponse), "price")
+				}
+				return
+			}
+
 			var response *CreateProductResponse
 			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
 				t.Fatal(err)
 			}
 			assert.Equal(t, tt.expectedResponse, response)
-			tt.mocked.productServ.AssertExpectations(t)
+			tt.fields.product.AssertExpectations(t)
 		})
 	}
 }

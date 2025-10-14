@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	userMocks "golang-training/logic/user/mocks"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 var (
@@ -26,6 +27,7 @@ func Test_handler_CreateUser(t *testing.T) {
 		c       *gin.Context
 		request []byte
 	}
+
 	tests := []struct {
 		name               string
 		fields             fields
@@ -58,7 +60,6 @@ func Test_handler_CreateUser(t *testing.T) {
 			expectedStatusCode: http.StatusInternalServerError,
 		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Assemble

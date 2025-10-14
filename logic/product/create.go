@@ -9,7 +9,6 @@ import (
 )
 
 func (ps *productImpl) Create(c ctx.Context, request *contract.CreateProductRequest) error {
-
 	log := logger.FromContextWithTag(c, logTag)
 
 	err := ps.product.Create(c, &model.Product{
@@ -19,7 +18,6 @@ func (ps *productImpl) Create(c ctx.Context, request *contract.CreateProductRequ
 		CreatedAt:       time.Now(),
 		UpdatedAt:       time.Now(),
 	})
-
 	if err != nil {
 		log.Error().Err(err).Msg("failed to create product")
 		return err
