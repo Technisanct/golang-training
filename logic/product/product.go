@@ -17,13 +17,13 @@ type Products interface {
 	Create(c context.Context, request *contract.CreateProductRequest) error
 }
 type productImpl struct {
-	product product.Product
+	repo product.Product
 }
 
 func New() Products {
 	var database *mongo.Database
 	database = config.Get().Database.MongoDB.Client.Database(config.Get().Database.MongoDB.DBName)
 	return &productImpl{
-		product: product.New(database),
+		repo: product.New(database),
 	}
 }

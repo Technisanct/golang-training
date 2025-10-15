@@ -11,7 +11,7 @@ import (
 func (ps *productImpl) Create(c ctx.Context, request *contract.CreateProductRequest) error {
 	log := logger.FromContextWithTag(c, logTag)
 
-	err := ps.product.Create(c, &model.Product{
+	err := ps.repo.Create(c, &model.Product{
 		Name:            request.Name,
 		Price:           request.Price,
 		DiscountedPrice: request.DiscountedPrice,

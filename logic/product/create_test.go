@@ -60,7 +60,7 @@ func TestProductService(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := productImpl{
-				product: tt.fields.product,
+				repo: tt.fields.product,
 			}
 			err := p.Create(tt.args.ctx, tt.args.request)
 			assert.Equal(t, tt.wantErr, err)
