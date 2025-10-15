@@ -2,9 +2,10 @@ package user
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang-training/config"
 	"golang-training/repository/user"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (

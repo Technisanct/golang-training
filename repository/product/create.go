@@ -1,7 +1,7 @@
-package user
+package product
 
 import (
-	"context"
+	ctx "context"
 	"golang-training/libs/logger"
 	"golang-training/repository/model"
 	"golang-training/storage/mongodb"
@@ -10,17 +10,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (u userImpl) Create(ctx context.Context, doc *model.User) error {
-	log := logger.FromContextWithTag(ctx, logTag)
-	newCtx, cancel := context.WithTimeout(ctx, mongodb.ConnectionTimeout*time.Second)
+func (p repo) Create(c ctx.Context, payloadData *model.Product) error {
+	log := logger.FromContextWithTag(c, logTag)
+	newCtx, cancel := ctx.WithTimeout(c, mongodb.ConnectionTimeout*time.Second)
 	defer cancel()
 
 	opts := options.InsertOne()
 
-	_, err := u.collection.InsertOne(newCtx, doc, opts)
+	_, err := p.collection.InsertOne(newCtx, payloadData, opts)
 	if err != nil {
 		log.Error().Err(err).
-			Interface("model", doc).
+			Interface("model", payloadData).
 			Msg("error while inserting data in mongodb")
 		return err
 	}

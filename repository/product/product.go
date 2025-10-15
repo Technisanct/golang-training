@@ -1,4 +1,4 @@
-package user
+package product
 
 import (
 	"context"
@@ -10,25 +10,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type User interface {
-	Create(ctx context.Context, doc *model.User) error
-	Find(ctx context.Context, uuid string) (*model.User, error)
+type Product interface {
+	Create(c context.Context, doc *model.Product) error
 }
 
 const (
-	logTag = "repository.user"
-
-	collectionName = "users"
+	logTag         = "repository.product"
+	collectionName = "products"
 	KeyObjectID    = "_id"
 )
 
-type userImpl struct {
+type repo struct {
 	collection *mongo.Collection
 }
 
-func New(database *mongo.Database) User {
-	collection := database.Collection(collectionName)
-
+func New(db *mongo.Database) *repo {
+	collection := db.Collection(collectionName)
 	mod := createIndexes()
 
 	_, err := collection.Indexes().CreateMany(context.Background(), *mod)
@@ -36,13 +33,11 @@ func New(database *mongo.Database) User {
 		panic(fmt.Sprintf("index creation failed in project repo with ERR: %v", err))
 	}
 
-	return &userImpl{
-		collection: collection,
+	return &repo{
+		collection,
 	}
-
 }
 
-// createIndexes... define indexes for the collection
 func createIndexes() *[]mongo.IndexModel {
 	indexModels := &[]mongo.IndexModel{
 		{
@@ -52,6 +47,5 @@ func createIndexes() *[]mongo.IndexModel {
 			Options: options.Index(),
 		},
 	}
-
 	return indexModels
 }

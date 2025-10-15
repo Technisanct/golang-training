@@ -2,10 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"golang-training/config"
 	"golang-training/handler"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 type HTTPServer struct {
