@@ -1,10 +1,11 @@
 package config
 
 import (
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang-training/storage/mongodb"
-	"gopkg.in/yaml.v3"
 	"os"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"gopkg.in/yaml.v3"
 )
 
 const (
