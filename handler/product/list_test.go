@@ -2,12 +2,12 @@ package product
 
 import (
 	"encoding/json"
+	"errors"
 	"golang-training/logic/product/mocks"
 	"golang-training/repository/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -20,16 +20,20 @@ var (
 			Name:            "test-1",
 			Price:           100.00,
 			DiscountedPrice: 10.00,
-			CreatedAt:       time.Now(),
-			UpdatedAt:       time.Now(),
 		},
 		{
 			Name:            "test-2",
 			Price:           100.00,
 			DiscountedPrice: 10.00,
-			CreatedAt:       time.Now(),
-			UpdatedAt:       time.Now(),
 		},
+	}
+	expectedListProductResponse = ListProductResponse{
+		Message: "successful",
+		Data:    returnListProductData,
+	}
+	expectedErrorListProductResponse = ListProductResponse{
+		Message: "",
+		Data:    nil,
 	}
 )
 
@@ -44,6 +48,7 @@ func TestListHandler(t *testing.T) {
 	tests := []struct {
 		name               string
 		expectedStatusCode int
+		expectedResponse   any
 		args               args
 		fields             fields
 	}{
@@ -56,6 +61,18 @@ func TestListHandler(t *testing.T) {
 				product: mockListLogicProduct(true, returnListProductData, nil),
 			},
 			expectedStatusCode: http.StatusOK,
+			expectedResponse:   expectedListProductResponse,
+		},
+		{
+			name: "error",
+			args: args{
+				ctx: nil,
+			},
+			fields: fields{
+				product: mockListLogicProduct(true, nil, errors.New("failed to fetch products")),
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+			expectedResponse:   expectedErrorListProductResponse,
 		},
 	}
 	for _, tt := range tests {
@@ -80,10 +97,7 @@ func TestListHandler(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			assert.Equal(t, response.Message, "successful")
-			assert.NotNil(t, response.Message)
-			assert.NotNil(t, response.Data)
-
+			assert.Equal(t, tt.expectedResponse, *response)
 			tt.fields.product.AssertExpectations(t)
 		})
 	}

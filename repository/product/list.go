@@ -11,13 +11,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	BATCH_SIZE = 100
+)
+
 var (
 	products []model.Product
 	product  model.Product
-)
-
-const (
-	BATCH_SIZE = 100
 )
 
 func (p repo) List(c ctx.Context) ([]model.Product, error) {

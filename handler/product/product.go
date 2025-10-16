@@ -15,6 +15,7 @@ type handler struct {
 
 const logTag = "handler.product"
 
+// create handler
 func (h handler) CreateProduct(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
@@ -39,5 +40,23 @@ func (h handler) CreateProduct(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, &CreateProductResponse{
 		Message: "product successfully created",
+	})
+}
+
+// list handler
+func (h *handler) ListProduct(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	products, err := h.product.List(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to fetch products")
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &ListProductResponse{
+		Message: "successful",
+		Data:    products,
 	})
 }
