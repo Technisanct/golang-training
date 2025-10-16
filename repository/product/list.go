@@ -25,7 +25,6 @@ func (p repo) List(c ctx.Context) ([]model.Product, error) {
 	newCtx, cancel := ctx.WithTimeout(c, mongodb.ConnectionTimeout*time.Second)
 	defer cancel()
 
-	// start := time.Now()
 	opts := options.Find().SetBatchSize(BATCH_SIZE)
 
 	cur, err := p.collection.Find(newCtx, bson.M{}, opts)
@@ -37,17 +36,12 @@ func (p repo) List(c ctx.Context) ([]model.Product, error) {
 	defer cur.Close(newCtx)
 
 	for cur.Next(newCtx) {
-		_ = cur.Decode(&product)
+		if err := cur.Decode(&product); err != nil {
+			log.Error().Err(err).Msg("failed to parse data into type model.Product")
+			return nil, err
+		}
 		products = append(products, product)
 	}
 
-	// if err = cur.All(newCtx, &products); err != nil {
-	// 	log.Error().Err(err).
-	// 		Msg(err.Error())
-	// 	return nil, err
-	// }
-
-	// end := time.Since(start)
-	// fmt.Println("total time taken to fetch products ", end)
 	return products, nil
 }

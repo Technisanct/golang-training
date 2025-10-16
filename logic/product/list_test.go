@@ -26,7 +26,6 @@ var (
 )
 
 func TestListProducts(t *testing.T) {
-
 	type fields struct {
 		product *mocks.Product
 	}
