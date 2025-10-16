@@ -22,5 +22,4 @@ func (h *handler) ListProduct(c *gin.Context) {
 		Message: "successful",
 		Data:    products,
 	})
-
 }
