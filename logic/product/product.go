@@ -4,6 +4,7 @@ import (
 	"context"
 	"golang-training/config"
 	"golang-training/logic/product/contract"
+	"golang-training/repository/model"
 	"golang-training/repository/product"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,6 +16,7 @@ const (
 
 type Products interface {
 	Create(c context.Context, request *contract.CreateProductRequest) error
+	List(c context.Context) ([]model.Product, error)
 }
 type productImpl struct {
 	repo product.Product

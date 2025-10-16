@@ -12,6 +12,7 @@ import (
 
 type Product interface {
 	Create(c context.Context, doc *model.Product) error
+	List(c context.Context) ([]model.Product, error)
 }
 
 const (
