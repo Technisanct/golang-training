@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"errors"
 	"golang-training/repository/model"
 	"golang-training/repository/product/mocks"
 	"testing"
@@ -34,10 +35,11 @@ func TestListProducts(t *testing.T) {
 	}
 
 	tests := []struct {
-		name    string
-		args    args
-		fields  fields
-		wantErr error
+		name             string
+		args             args
+		fields           fields
+		wantListProducts []model.Product
+		wantErr          error
 	}{
 		{
 			name: "happy path",
@@ -47,7 +49,19 @@ func TestListProducts(t *testing.T) {
 			fields: fields{
 				product: mockListProductRepo(true, returnListProductData, nil),
 			},
-			wantErr: nil,
+			wantErr:          nil,
+			wantListProducts: returnListProductData,
+		},
+		{
+			name: "error",
+			args: args{
+				ctx: context.Background(),
+			},
+			fields: fields{
+				product: mockListProductRepo(true, nil, errors.New("failed to fetch")),
+			},
+			wantErr:          errors.New("failed to fetch"),
+			wantListProducts: nil,
 		},
 	}
 	for _, tt := range tests {
@@ -56,9 +70,8 @@ func TestListProducts(t *testing.T) {
 				repo: tt.fields.product,
 			}
 			products, err := p.List(tt.args.ctx)
-			assert.NoError(t, err)
-			assert.Equal(t, tt.wantErr, nil)
-			assert.NotNil(t, products)
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.wantListProducts, products)
 		})
 	}
 }
