@@ -33,9 +33,10 @@ func (p repo) List(c ctx.Context) ([]model.Product, error) {
 			Msg("error while inserting data in mongodb")
 		return nil, err
 	}
-	defer cur.Close(newCtx)
 
-	for cur.Next(newCtx) {
+	defer cur.Close(c)
+
+	for cur.Next(c) {
 		if err := cur.Decode(&product); err != nil {
 			log.Error().Err(err).Msg("failed to parse data into type model.Product")
 			return nil, err

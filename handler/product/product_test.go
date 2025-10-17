@@ -4,35 +4,46 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"golang-training/logic/product/contract"
 	"golang-training/logic/product/mocks"
-	"golang-training/repository/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
 	validCreateProductRequest   = []byte(`{"name": "test1", "price": 100.00, "discount_price": 10.00}`)
 	invalidCreateProductRequest = []byte(`{"name": "test1", "discount_price": 10.00}`)
-	returnListProductData       = []model.Product{
+
+	fixedObjectId         = primitive.NewObjectID()
+	fixedTestTime         = time.Date(2025, time.October, 0, 0, 0, 0, 0, time.UTC)
+	returnListProductData = []contract.Product{
 		{
+			ID:              fixedObjectId.String(),
 			Name:            "test-1",
-			Price:           100.00,
+			Price:           100.000,
 			DiscountedPrice: 10.00,
+			CreatedAt:       fixedTestTime,
+			UpdatedAt:       fixedTestTime,
 		},
 		{
-			Name:            "test-2",
-			Price:           100.00,
+			ID:              fixedObjectId.String(),
+			Name:            "test-1",
+			Price:           100.000,
 			DiscountedPrice: 10.00,
+			CreatedAt:       fixedTestTime,
+			UpdatedAt:       fixedTestTime,
 		},
 	}
 	expectedListProductResponse = ListProductResponse{
 		Message: "successful",
-		Data:    returnListProductData,
+		Data:    toHandlerProductMapping(returnListProductData),
 	}
 	expectedErrorListProductResponse = ListProductResponse{
 		Message: "",
@@ -186,7 +197,7 @@ func mockLogicProduct(enableFlag bool, err error) *mocks.Products {
 	return client
 }
 
-func mockListLogicProduct(enableFlag bool, returnProductListData []model.Product, createErr error) *mocks.Products {
+func mockListLogicProduct(enableFlag bool, returnProductListData []contract.Product, createErr error) *mocks.Products {
 	client := &mocks.Products{}
 	if enableFlag {
 		client.

@@ -15,7 +15,6 @@ type handler struct {
 
 const logTag = "handler.product"
 
-// create handler
 func (h handler) CreateProduct(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
@@ -43,7 +42,6 @@ func (h handler) CreateProduct(c *gin.Context) {
 	})
 }
 
-// list handler
 func (h *handler) ListProduct(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
@@ -57,6 +55,23 @@ func (h *handler) ListProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &ListProductResponse{
 		Message: "successful",
-		Data:    products,
+		Data:    toHandlerProductMapping(products),
 	})
+}
+
+func toHandlerProductMapping(input []contract.Product) []Product {
+	result := make([]Product, len(input))
+
+	for idx, product := range input {
+		result[idx] = Product{
+			ID:              product.ID,
+			Name:            product.Name,
+			Price:           product.Price,
+			DiscountedPrice: product.DiscountedPrice,
+			CreatedAt:       product.CreatedAt,
+			UpdatedAt:       product.UpdatedAt,
+		}
+	}
+
+	return result
 }
