@@ -1,8 +1,9 @@
 package product
 
-import "golang-training/repository/model"
+import (
+	"time"
+)
 
-// create product dto
 type CreateProductResponse struct {
 	Message string `json:"message"`
 }
@@ -12,8 +13,16 @@ type CreateProductRequest struct {
 	DiscountedPrice float32 `json:"discount_price" binding:"required,gt=0"`
 }
 
-// list product dto
+type Product struct {
+	ID              string
+	UUID            string
+	Name            string
+	Price           float32
+	DiscountedPrice float32
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+}
 type ListProductResponse struct {
-	Message string          `json:"message"`
-	Data    []model.Product `json:"data"`
+	Message string    `json:"message"`
+	Data    []Product `json:"data"`
 }
