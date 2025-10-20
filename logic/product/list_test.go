@@ -18,7 +18,7 @@ var (
 	fixedObjectId = primitive.NewObjectID()
 	fixedTestTime = time.Date(2025, time.October, 10, 0, 0, 0, 0, time.UTC)
 
-	returnListProductData = []model.Product{
+	returnListProductData = []*model.Product{
 		{
 			ID:              &fixedObjectId,
 			Name:            "test-1",
@@ -37,9 +37,9 @@ var (
 		},
 	}
 
-	expectedProductOutput = []contract.Product{
+	expectedProductOutput = []*contract.Product{
 		{
-			ID:              fixedObjectId.String(),
+			ID:              fixedObjectId.Hex(),
 			Name:            "test-1",
 			Price:           100.000,
 			DiscountedPrice: 10.00,
@@ -47,7 +47,7 @@ var (
 			UpdatedAt:       fixedTestTime,
 		},
 		{
-			ID:              fixedObjectId.String(),
+			ID:              fixedObjectId.Hex(),
 			Name:            "test-1",
 			Price:           100.000,
 			DiscountedPrice: 10.00,
@@ -69,7 +69,7 @@ func TestListProducts(t *testing.T) {
 		name             string
 		args             args
 		fields           fields
-		wantListProducts []contract.Product
+		wantListProducts []*contract.Product
 		wantErr          error
 	}{
 		{
@@ -108,7 +108,7 @@ func TestListProducts(t *testing.T) {
 	}
 }
 
-func mockListProductRepo(enableFlag bool, returnProductListData []model.Product, createErr error) *mocks.Product {
+func mockListProductRepo(enableFlag bool, returnProductListData []*model.Product, createErr error) *mocks.Product {
 	client := &mocks.Product{}
 	if enableFlag {
 		client.On("List", mock.Anything).Return(

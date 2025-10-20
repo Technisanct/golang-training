@@ -23,7 +23,7 @@ var (
 
 	fixedObjectId         = primitive.NewObjectID()
 	fixedTestTime         = time.Date(2025, time.October, 0, 0, 0, 0, 0, time.UTC)
-	returnListProductData = []contract.Product{
+	returnListProductData = []*contract.Product{
 		{
 			ID:              fixedObjectId.String(),
 			Name:            "test-1",
@@ -197,7 +197,7 @@ func mockLogicProduct(enableFlag bool, err error) *mocks.Products {
 	return client
 }
 
-func mockListLogicProduct(enableFlag bool, returnProductListData []contract.Product, createErr error) *mocks.Products {
+func mockListLogicProduct(enableFlag bool, returnProductListData []*contract.Product, createErr error) *mocks.Products {
 	client := &mocks.Products{}
 	if enableFlag {
 		client.

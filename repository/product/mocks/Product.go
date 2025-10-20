@@ -33,23 +33,23 @@ func (_m *Product) Create(c context.Context, doc *model.Product) error {
 }
 
 // List provides a mock function with given fields: c
-func (_m *Product) List(c context.Context) ([]model.Product, error) {
+func (_m *Product) List(c context.Context) ([]*model.Product, error) {
 	ret := _m.Called(c)
 
 	if len(ret) == 0 {
 		panic("no return value specified for List")
 	}
 
-	var r0 []model.Product
+	var r0 []*model.Product
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]model.Product, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*model.Product, error)); ok {
 		return rf(c)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []model.Product); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []*model.Product); ok {
 		r0 = rf(c)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]model.Product)
+			r0 = ret.Get(0).([]*model.Product)
 		}
 	}
 
