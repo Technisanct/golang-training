@@ -59,7 +59,7 @@ func (h *handler) ListProduct(c *gin.Context) {
 	})
 }
 
-func toHandlerProductMapping(input []contract.Product) []Product {
+func toHandlerProductMapping(input []*contract.Product) []Product {
 	result := make([]Product, len(input))
 
 	for idx, product := range input {

@@ -7,7 +7,7 @@ import (
 	"golang-training/repository/model"
 )
 
-func (ps *productImpl) List(c context.Context) ([]contract.Product, error) {
+func (ps *productImpl) List(c context.Context) ([]*contract.Product, error) {
 	log := logger.FromContextWithTag(c, logTag)
 
 	products, err := ps.repo.List(c)
@@ -19,11 +19,11 @@ func (ps *productImpl) List(c context.Context) ([]contract.Product, error) {
 	return toLogicProductMapping(products), nil
 }
 
-func toLogicProductMapping(input []model.Product) []contract.Product {
-	result := make([]contract.Product, len(input))
+func toLogicProductMapping(input []*model.Product) []*contract.Product {
+	result := make([]*contract.Product, len(input))
 	for idx, product := range input {
-		result[idx] = contract.Product{
-			ID:              product.ID.String(),
+		result[idx] = &contract.Product{
+			ID:              product.ID.Hex(),
 			Name:            product.Name,
 			Price:           product.Price,
 			DiscountedPrice: product.DiscountedPrice,
