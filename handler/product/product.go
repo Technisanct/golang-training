@@ -55,15 +55,15 @@ func (h *handler) ListProduct(c *gin.Context) {
 
 	c.JSON(http.StatusOK, &ListProductResponse{
 		Message: "successful",
-		Data:    toHandlerProductMapping(products),
+		Data:    mapLogicToHandler(products),
 	})
 }
 
-func toHandlerProductMapping(input []*contract.Product) []Product {
-	result := make([]Product, len(input))
+func mapLogicToHandler(input []*contract.Product) []Product {
+	results := make([]Product, 0, len(input))
 
-	for idx, product := range input {
-		result[idx] = Product{
+	for _, product := range input {
+		result := Product{
 			ID:              product.ID,
 			Name:            product.Name,
 			Price:           product.Price,
@@ -71,7 +71,9 @@ func toHandlerProductMapping(input []*contract.Product) []Product {
 			CreatedAt:       product.CreatedAt,
 			UpdatedAt:       product.UpdatedAt,
 		}
+
+		results = append(results, result)
 	}
 
-	return result
+	return results
 }
