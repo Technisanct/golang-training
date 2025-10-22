@@ -43,7 +43,7 @@ var (
 	}
 	expectedListProductResponse = ListProductResponse{
 		Message: "successful",
-		Data:    toHandlerProductMapping(returnListProductData),
+		Data:    mapLogicToHandler(returnListProductData),
 	}
 	expectedErrorListProductResponse = ListProductResponse{
 		Message: "",
