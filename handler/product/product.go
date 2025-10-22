@@ -63,16 +63,18 @@ func mapLogicToHandler(input []*contract.Product) []Product {
 	results := make([]Product, 0, len(input))
 
 	for _, product := range input {
-		result := Product{
-			ID:              product.ID,
-			Name:            product.Name,
-			Price:           product.Price,
-			DiscountedPrice: product.DiscountedPrice,
-			CreatedAt:       product.CreatedAt,
-			UpdatedAt:       product.UpdatedAt,
-		}
 
-		results = append(results, result)
+		if product != nil {
+			result := Product{
+				ID:              product.ID,
+				Name:            product.Name,
+				Price:           product.Price,
+				DiscountedPrice: product.DiscountedPrice,
+				CreatedAt:       product.CreatedAt,
+				UpdatedAt:       product.UpdatedAt,
+			}
+			results = append(results, result)
+		}
 	}
 
 	return results
