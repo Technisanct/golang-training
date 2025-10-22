@@ -33,15 +33,24 @@ func (p repo) List(c ctx.Context) ([]*model.Product, error) {
 		return nil, err
 	}
 
-	defer cur.Close(c)
+	defer func() {
+		if err := cur.Close(newCtx); err != nil {
+			log.Error().Err(err).Msg("failed to parse data into type model.Product")
+		}
+	}()
 
-	for cur.Next(c) {
+	for cur.Next(newCtx) {
 		var product model.Product
 		if err := cur.Decode(&product); err != nil {
 			log.Error().Err(err).Msg("failed to parse data into type model.Product")
 			return nil, err
 		}
 		products = append(products, &product)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Error().Err(err).Msg("cursor failed to fetch products")
+		return nil, err
 	}
 
 	return products, nil
