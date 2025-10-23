@@ -13,6 +13,8 @@ func AddRoute(router *gin.Engine, relativePath string) {
 
 	// /product
 	router.GET(relativePath, h.ListProduct)
+	// /product/:id
+	router.GET(relativePath+"/:id", h.GetProduct)
 	// /product/create
 	router.POST(relativePath+"/create", h.CreateProduct)
 }

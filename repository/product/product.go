@@ -13,7 +13,10 @@ import (
 type Product interface {
 	Create(c context.Context, doc *model.Product) error
 	List(c context.Context) ([]*model.Product, error)
+	Get(c context.Context, productId string) (*model.Product, error)
 }
+
+// Update(c context.Context, productId string, doc *model.Product) error
 
 const (
 	logTag         = "repository.product"

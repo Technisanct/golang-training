@@ -1,12 +1,14 @@
 package product
 
 import (
+	"errors"
 	"golang-training/libs/logger"
 	"golang-training/logic/product"
 	"golang-training/logic/product/contract"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type handler struct {
@@ -59,6 +61,30 @@ func (h *handler) ListProduct(c *gin.Context) {
 	})
 }
 
+func (h *handler) GetProduct(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+	productId := c.Param("id")
+
+	product, err := h.product.Get(ctx, productId)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to get product")
+
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &GetProductResponse{
+		Message: "successful",
+		Data:    mapSingleProductFromLogicToHandler(product),
+	})
+}
+
 func mapLogicToHandler(input []*contract.Product) []Product {
 	results := make([]Product, 0, len(input))
 
@@ -78,4 +104,16 @@ func mapLogicToHandler(input []*contract.Product) []Product {
 	}
 
 	return results
+}
+
+func mapSingleProductFromLogicToHandler(input *contract.Product) Product {
+	return Product{
+		ID:              input.ID,
+		UUID:            input.UUID,
+		Name:            input.Name,
+		Price:           input.Price,
+		DiscountedPrice: input.DiscountedPrice,
+		CreatedAt:       input.CreatedAt,
+		UpdatedAt:       input.UpdatedAt,
+	}
 }

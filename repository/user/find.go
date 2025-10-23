@@ -2,12 +2,13 @@ package user
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"golang-training/libs/logger"
 	"golang-training/repository/model"
 	"golang-training/storage/mongodb"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func (u userImpl) Find(ctx context.Context, uuid string) (*model.User, error) {
