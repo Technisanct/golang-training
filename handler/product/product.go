@@ -41,3 +41,41 @@ func (h handler) CreateProduct(c *gin.Context) {
 		Message: "product successfully created",
 	})
 }
+
+func (h *handler) ListProduct(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+
+	products, err := h.product.List(ctx)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to fetch products")
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &ListProductResponse{
+		Message: "successful",
+		Data:    mapLogicToHandler(products),
+	})
+}
+
+func mapLogicToHandler(input []*contract.Product) []Product {
+	results := make([]Product, 0, len(input))
+
+	for _, product := range input {
+
+		if product != nil {
+			result := Product{
+				ID:              product.ID,
+				Name:            product.Name,
+				Price:           product.Price,
+				DiscountedPrice: product.DiscountedPrice,
+				CreatedAt:       product.CreatedAt,
+				UpdatedAt:       product.UpdatedAt,
+			}
+			results = append(results, result)
+		}
+	}
+
+	return results
+}

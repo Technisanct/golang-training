@@ -32,57 +32,29 @@ func (_m *Product) Create(c context.Context, doc *model.Product) error {
 	return r0
 }
 
-// GetAll provides a mock function with given fields: c
-func (_m *Product) GetAll(c context.Context) ([]model.Product, error) {
+// List provides a mock function with given fields: c
+func (_m *Product) List(c context.Context) ([]*model.Product, error) {
 	ret := _m.Called(c)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetAll")
+		panic("no return value specified for List")
 	}
 
-	var r0 []model.Product
+	var r0 []*model.Product
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) ([]model.Product, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*model.Product, error)); ok {
 		return rf(c)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) []model.Product); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) []*model.Product); ok {
 		r0 = rf(c)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]model.Product)
+			r0 = ret.Get(0).([]*model.Product)
 		}
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(c)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetOne provides a mock function with given fields: c, id
-func (_m *Product) GetOne(c context.Context, id int) (model.Product, error) {
-	ret := _m.Called(c, id)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetOne")
-	}
-
-	var r0 model.Product
-	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, int) (model.Product, error)); ok {
-		return rf(c, id)
-	}
-	if rf, ok := ret.Get(0).(func(context.Context, int) model.Product); ok {
-		r0 = rf(c, id)
-	} else {
-		r0 = ret.Get(0).(model.Product)
-	}
-
-	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
-		r1 = rf(c, id)
 	} else {
 		r1 = ret.Error(1)
 	}

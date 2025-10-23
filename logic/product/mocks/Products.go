@@ -32,6 +32,36 @@ func (_m *Products) Create(c context.Context, request *contract.CreateProductReq
 	return r0
 }
 
+// List provides a mock function with given fields: c
+func (_m *Products) List(c context.Context) ([]*contract.Product, error) {
+	ret := _m.Called(c)
+
+	if len(ret) == 0 {
+		panic("no return value specified for List")
+	}
+
+	var r0 []*contract.Product
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]*contract.Product, error)); ok {
+		return rf(c)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []*contract.Product); ok {
+		r0 = rf(c)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]*contract.Product)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(c)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewProducts creates a new instance of Products. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewProducts(t interface {
