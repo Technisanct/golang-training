@@ -30,3 +30,12 @@ type GetProductResponse struct {
 	Message string  `json:"message"`
 	Data    Product `json:"data"`
 }
+
+type CreateProduct struct {
+	ProductName string  `json:"productName"`
+	Price       float32 `json:"price"`
+}
+
+type GetProductReq struct {
+	UUID string `uri:"uuid"`
+}
