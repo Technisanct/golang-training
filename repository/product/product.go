@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	ctx "context"
 	"fmt"
 	"golang-training/repository/model"
 
@@ -13,6 +14,7 @@ import (
 type Product interface {
 	Create(c context.Context, doc *model.Product) error
 	List(c context.Context) ([]*model.Product, error)
+	Update(c ctx.Context, productId string, updateProductRequest *model.Product) error
 }
 
 const (

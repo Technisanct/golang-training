@@ -59,6 +59,34 @@ func (h *handler) ListProduct(c *gin.Context) {
 	})
 }
 
+func (h *handler) UpdateProduct(c *gin.Context) {
+	ctx := c.Request.Context()
+	log := logger.FromContextWithTag(ctx, logTag)
+	productId := c.Param("id")
+
+	req := UpdateProductRequest{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		log.Error().Err(err).Msg("failed to parse request data")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	err := h.product.Update(ctx, productId, &contract.UpdateProductRequest{
+		Price:           req.Price,
+		Name:            req.Name,
+		DiscountedPrice: req.DiscountedPrice,
+	})
+	if err != nil {
+		log.Error().Err(err).Msg("failed to parse request data")
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &UpdateProductResponse{
+		Message: "update successful",
+	})
+}
+
 func mapLogicToHandler(input []*contract.Product) []Product {
 	results := make([]Product, 0, len(input))
 

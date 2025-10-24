@@ -62,6 +62,24 @@ func (_m *Products) List(c context.Context) ([]*contract.Product, error) {
 	return r0, r1
 }
 
+// Update provides a mock function with given fields: c, productId, updateProductRequest
+func (_m *Products) Update(c context.Context, productId string, updateProductRequest *contract.UpdateProductRequest) error {
+	ret := _m.Called(c, productId, updateProductRequest)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Update")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, *contract.UpdateProductRequest) error); ok {
+		r0 = rf(c, productId, updateProductRequest)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewProducts creates a new instance of Products. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewProducts(t interface {
