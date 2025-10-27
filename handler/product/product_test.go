@@ -2,10 +2,12 @@ package product
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"golang-training/logic/product/contract"
 	"golang-training/logic/product/mocks"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -48,6 +50,18 @@ var (
 	expectedErrorListProductResponse = ListProductResponse{
 		Message: "",
 		Data:    nil,
+	}
+
+	validExpectedUpdateRequestData   = []byte(`{"name": "test-1", "price": 100.00, "discount_price": 120.00}`)
+	inValidExpectedUpdateRequestData = []byte(`{"name": "test-1", "price": 100.00}`)
+	expectedUpdateResponseData       = &UpdateProductResponse{
+		Message: "update successful",
+	}
+	expectedUpdateErrorResponseData = &UpdateProductResponse{
+		Message: "",
+	}
+	expectedUpdateInvalidErrorResponseData = &UpdateProductResponse{
+		Message: "Key: 'UpdateProductRequest.DiscountedPrice' Error:Field validation for 'DiscountedPrice' failed on the 'required' tag",
 	}
 )
 
@@ -189,6 +203,88 @@ func TestListHandler(t *testing.T) {
 	}
 }
 
+func TestUpdateHandler(t *testing.T) {
+	type fields struct {
+		product *mocks.Products
+	}
+	type args struct {
+		ctx context.Context
+	}
+
+	tests := []struct {
+		name                   string
+		fields                 fields
+		args                   args
+		wantErr                error
+		expectedStatusCode     int
+		expectedUpdateResponse *UpdateProductResponse
+		expectedUpdateRequest  []byte
+	}{
+		{
+			name: "happy path",
+			fields: fields{
+				product: mockUpdateLogicProduct(true, nil),
+			},
+			args: args{
+				ctx: nil,
+			},
+			expectedStatusCode:     http.StatusOK,
+			expectedUpdateResponse: expectedUpdateResponseData,
+			expectedUpdateRequest:  validExpectedUpdateRequestData,
+		},
+		{
+			name: "logic error",
+			fields: fields{
+				product: mockUpdateLogicProduct(true, errors.New("product update failed")),
+			},
+			args: args{
+				ctx: nil,
+			},
+			expectedStatusCode:     http.StatusInternalServerError,
+			expectedUpdateResponse: expectedUpdateErrorResponseData,
+			expectedUpdateRequest:  validExpectedUpdateRequestData,
+		},
+		{
+			name: "validation error",
+			fields: fields{
+				product: mockUpdateLogicProduct(false, nil),
+			},
+			args: args{
+				ctx: nil,
+			},
+			expectedStatusCode:     http.StatusBadRequest,
+			expectedUpdateResponse: expectedUpdateInvalidErrorResponseData,
+			expectedUpdateRequest:  inValidExpectedUpdateRequestData,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(w)
+			r, _ := http.NewRequest("PUT", "/products/", bytes.NewBuffer(tt.expectedUpdateRequest))
+			c.Request = r
+
+			t.Run(tt.name, func(t *testing.T) {
+				h := handler{
+					product: tt.fields.product,
+				}
+				h.UpdateProduct(c)
+			})
+
+			assert.Equal(t, tt.expectedStatusCode, w.Code)
+
+			var response *UpdateProductResponse
+			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+				log.Fatal(err)
+			}
+
+			assert.Equal(t, tt.expectedUpdateResponse, response)
+			tt.fields.product.AssertExpectations(t)
+		})
+	}
+}
+
 func mockLogicProduct(enableFlag bool, err error) *mocks.Products {
 	client := &mocks.Products{}
 	if enableFlag {
@@ -203,6 +299,17 @@ func mockListLogicProduct(enableFlag bool, returnProductListData []*contract.Pro
 		client.
 			On("List", mock.Anything).
 			Return(returnProductListData, createErr)
+	}
+	return client
+}
+
+func mockUpdateLogicProduct(enableFlag bool, createErr error) *mocks.Products {
+	client := &mocks.Products{}
+	if enableFlag {
+		client.
+			On("Update", mock.Anything, mock.Anything, mock.Anything).
+			Return(createErr)
+
 	}
 	return client
 }

@@ -25,7 +25,7 @@ func (p repo) Update(c ctx.Context, productId string, updateProductRequest *mode
 	}
 
 	opts := options.Update()
-	updateDoc := bson.M{"price": updateProductRequest.Price, "name": updateProductRequest.Name, "discountPrice": updateProductRequest.DiscountedPrice, "updatedAt": time.Now()}
+	updateDoc := bson.M{"price": updateProductRequest.Price, "name": updateProductRequest.Name, "discountedPrice": updateProductRequest.DiscountedPrice, "updatedAt": time.Now()}
 	update := bson.D{{Key: "$set", Value: updateDoc}}
 
 	result, err := p.collection.UpdateOne(newCtx, bson.M{"_id": productID}, update, opts)

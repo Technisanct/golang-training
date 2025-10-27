@@ -67,7 +67,9 @@ func (h *handler) UpdateProduct(c *gin.Context) {
 	req := UpdateProductRequest{}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		log.Error().Err(err).Msg("failed to parse request data")
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, &UpdateProductResponse{
+			Message: err.Error(),
+		})
 		return
 	}
 
@@ -77,7 +79,7 @@ func (h *handler) UpdateProduct(c *gin.Context) {
 		DiscountedPrice: req.DiscountedPrice,
 	})
 	if err != nil {
-		log.Error().Err(err).Msg("failed to parse request data")
+		log.Error().Err(err).Msg("failed to update data")
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
