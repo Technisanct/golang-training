@@ -49,6 +49,25 @@ var (
 		Message: "",
 		Data:    nil,
 	}
+
+	expectedGetProductData = &contract.Product{
+		ID:              fixedObjectId.String(),
+		Name:            "test-1",
+		Price:           100.000,
+		DiscountedPrice: 10.00,
+		CreatedAt:       fixedTestTime,
+		UpdatedAt:       fixedTestTime,
+	}
+
+	expectedGetProductResponse = GetProductResponse{
+		Message: "successful",
+		Data:    mapSingleProductFromLogicToHandler(expectedGetProductData),
+	}
+
+	expectedGetProductErrorResponse = GetProductResponse{
+		Message: "",
+		Data:    Product{},
+	}
 )
 
 func TestCreateProductHandler(t *testing.T) {
