@@ -12,6 +12,14 @@ type CreateProductRequest struct {
 	Price           float32 `json:"price" binding:"required,gt=0"`
 	DiscountedPrice float32 `json:"discount_price" binding:"required,gt=0"`
 }
+type UpdateProductResponse struct {
+	Message string `json:"message"`
+}
+type UpdateProductRequest struct {
+	Name            string  `json:"name" binding:"required"`
+	Price           float32 `json:"price" binding:"required,gt=0"`
+	DiscountedPrice float32 `json:"discount_price" binding:"required,gt=0"`
+}
 
 type Product struct {
 	ID              string

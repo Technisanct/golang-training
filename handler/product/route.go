@@ -15,4 +15,6 @@ func AddRoute(router *gin.Engine, relativePath string) {
 	router.GET(relativePath, h.ListProduct)
 	// /product/create
 	router.POST(relativePath+"/create", h.CreateProduct)
+	// /product/update/:id
+	router.PUT(relativePath+"/:id", h.UpdateProduct)
 }

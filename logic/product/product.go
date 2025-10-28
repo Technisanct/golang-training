@@ -17,6 +17,7 @@ const (
 type Products interface {
 	Create(c context.Context, request *contract.CreateProductRequest) error
 	List(c context.Context) ([]*contract.Product, error)
+	Update(c context.Context, productId string, updateProductRequest *contract.UpdateProductRequest) error
 }
 type productImpl struct {
 	repo product.Product
