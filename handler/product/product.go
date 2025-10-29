@@ -2,6 +2,7 @@ package product
 
 import (
 	"errors"
+	"fmt"
 	"golang-training/libs/logger"
 	"golang-training/logic/product"
 	"golang-training/logic/product/contract"
@@ -85,9 +86,16 @@ func mapLogicToHandler(input []*contract.Product) []Product {
 func (h *handler) GetProduct(c *gin.Context) {
 	ctx := c.Request.Context()
 	log := logger.FromContextWithTag(ctx, logTag)
-	productId := c.Param("id")
 
-	product, err := h.product.Get(ctx, productId)
+	req := GetProductRequest{}
+	if err := c.ShouldBindUri(&req); err != nil {
+		log.Error().Err(err).Msg("product Id not provided")
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Println("error", req.ID)
+	product, err := h.product.Get(ctx, req.ID)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to get product")
 

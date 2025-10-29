@@ -12,7 +12,6 @@ type CreateProductRequest struct {
 	Price           float32 `json:"price" binding:"required,gt=0"`
 	DiscountedPrice float32 `json:"discount_price" binding:"required,gt=0"`
 }
-
 type Product struct {
 	ID              string
 	UUID            string
@@ -25,6 +24,9 @@ type Product struct {
 type ListProductResponse struct {
 	Message string    `json:"message"`
 	Data    []Product `json:"data"`
+}
+type GetProductRequest struct {
+	ID string `uri:"id"`
 }
 type GetProductResponse struct {
 	Message string  `json:"message"`
