@@ -32,6 +32,36 @@ func (_m *Products) Create(c context.Context, request *contract.CreateProductReq
 	return r0
 }
 
+// Get provides a mock function with given fields: c, productId
+func (_m *Products) Get(c context.Context, productId string) (*contract.Product, error) {
+	ret := _m.Called(c, productId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 *contract.Product
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*contract.Product, error)); ok {
+		return rf(c, productId)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) *contract.Product); ok {
+		r0 = rf(c, productId)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*contract.Product)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(c, productId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // List provides a mock function with given fields: c
 func (_m *Products) List(c context.Context) ([]*contract.Product, error) {
 	ret := _m.Called(c)

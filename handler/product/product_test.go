@@ -49,6 +49,25 @@ var (
 		Message: "",
 		Data:    nil,
 	}
+
+	expectedGetProductData = &contract.Product{
+		ID:              fixedObjectId.String(),
+		Name:            "test-1",
+		Price:           100.000,
+		DiscountedPrice: 10.00,
+		CreatedAt:       fixedTestTime,
+		UpdatedAt:       fixedTestTime,
+	}
+
+	expectedGetProductResponse = GetProductResponse{
+		Message: "successful",
+		Data:    mapSingleProductFromLogicToHandler(expectedGetProductData),
+	}
+
+	expectedGetProductErrorResponse = GetProductResponse{
+		Message: "",
+		Data:    Product{},
+	}
 )
 
 func TestCreateProductHandler(t *testing.T) {
@@ -189,6 +208,73 @@ func TestListHandler(t *testing.T) {
 	}
 }
 
+func TestGetHandler(t *testing.T) {
+	type fields struct {
+		product *mocks.Products
+	}
+	type args struct {
+		ctx *gin.Context
+	}
+
+	tests := []struct {
+		name               string
+		expectedStatusCode int
+		expectedResponse   any
+		args               args
+		fields             fields
+	}{
+		{
+			name:               "happy path",
+			expectedStatusCode: http.StatusOK,
+			expectedResponse:   expectedGetProductResponse,
+			args: args{
+				ctx: nil,
+			},
+			fields: fields{
+				product: mockGetLogicProduct(true, expectedGetProductData, nil),
+			},
+		},
+		{
+			name:               "logic error",
+			expectedStatusCode: http.StatusInternalServerError,
+			expectedResponse:   expectedGetProductErrorResponse,
+			args: args{
+				ctx: nil,
+			},
+			fields: fields{
+				product: mockGetLogicProduct(true, nil, errors.New("failed")),
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := httptest.NewRecorder()
+			c, _ := gin.CreateTestContext(w)
+			r, _ := http.NewRequest("GET", "/product/"+fixedObjectId.Hex(), nil)
+			c.Request = r
+
+			t.Run(tt.name, func(t *testing.T) {
+				h := handler{
+					product: tt.fields.product,
+				}
+
+				h.GetProduct(c)
+			})
+
+			assert.Equal(t, tt.expectedStatusCode, w.Code)
+
+			var response *GetProductResponse
+			if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+				t.Fatal(err)
+			}
+
+			assert.Equal(t, tt.expectedResponse, *response)
+			tt.fields.product.AssertExpectations(t)
+		})
+	}
+}
+
 func mockLogicProduct(enableFlag bool, err error) *mocks.Products {
 	client := &mocks.Products{}
 	if enableFlag {
@@ -204,5 +290,16 @@ func mockListLogicProduct(enableFlag bool, returnProductListData []*contract.Pro
 			On("List", mock.Anything).
 			Return(returnProductListData, createErr)
 	}
+	return client
+}
+
+func mockGetLogicProduct(enableFlag bool, returnProductGetData *contract.Product, createErr error) *mocks.Products {
+	client := &mocks.Products{}
+	if enableFlag {
+		client.
+			On("Get", mock.Anything, mock.Anything).
+			Return(returnProductGetData, createErr)
+	}
+
 	return client
 }
